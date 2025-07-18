@@ -38,6 +38,7 @@
 #define TASK3 myTask03Handle
 #define COUNT_UP count()
 #define KEYSEM1Handle myCountingSem01Handle
+#define KEYTOKEN CONTEXTKEYHandle
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -523,8 +524,8 @@ void StartDefaultTask(void *argument)
 		 {
 			if (buttonstate)
 			{
-				osMutexAcquire(CONTEXTKEYHandle, osMutexWait);
-				osMutexRelease(CONTEXTKEYHandle);
+				osMutexAcquire(KEYTOKEN, osMutexWait);
+				osMutexRelease(KEYTOKEN);
 				buttonstate = 0;
 				currentTask = 1;
 			}
@@ -548,14 +549,14 @@ void StartTask02(void *argument)
   {
 	  if(currentTask ==  1)
 	  {
-	    osMutexAcquire(CONTEXTKEYHandle, osMutexWait); //acquires key.
+	    osMutexAcquire(KEYTOKEN, osMutexWait); //acquires key.
 		if (activeTask == 2)
 		{
 			HAL_UART_Transmit(&hlpuart1, (uint8_t*) "Task02\n", 7, HAL_MAX_DELAY);
 			COUNT_UP;
 			activeTask = 3;
 		}
-		osMutexRelease(CONTEXTKEYHandle); //Release key to Task 3.
+		osMutexRelease(KEYTOKEN); //Release key to Task 3.
 	  }
    }
   /* USER CODE END StartTask02 */
@@ -577,14 +578,14 @@ void StartTask03(void *argument)
   {
 	  if(currentTask ==  1)
 	  {
-    	osMutexAcquire(CONTEXTKEYHandle, osMutexWait); //acquires key.
+    	osMutexAcquire(KEYTOKEN, osMutexWait); //acquires key.
 		if (activeTask == 3)
 		{
 			HAL_UART_Transmit(&hlpuart1, (uint8_t*) "Task03\n", 7, HAL_MAX_DELAY);
 			COUNT_UP;
 			activeTask = 2;
 		}
-		osMutexRelease(CONTEXTKEYHandle); // Release key to task 2.
+		osMutexRelease(KEYTOKEN); // Release key to task 2.
 	  }
   }
   /* USER CODE END StartTask03 */
